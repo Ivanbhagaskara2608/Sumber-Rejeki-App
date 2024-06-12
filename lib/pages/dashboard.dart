@@ -115,15 +115,14 @@ class DashboardPage extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                print('Pengaturan');
               },
               child: Column(
                 children: [
-                  Image.asset("assets/images/settings.png", scale: 4),
+                  Image.asset("assets/images/logout.png", scale: 4),
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text('Pengaturan')
+                  const Text('Logout')
                 ],
               ),
             ),

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class AddTransactionPage extends StatefulWidget {
-  const AddTransactionPage({super.key});
+class AddPurchasePage extends StatefulWidget {
+  const AddPurchasePage({super.key});
 
   @override
-  State<AddTransactionPage> createState() => _AddTransactionPageState();
+  State<AddPurchasePage> createState() => _AddPurchasePageState();
 }
 
-class _AddTransactionPageState extends State<AddTransactionPage> {
+class _AddPurchasePageState extends State<AddPurchasePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,12 +20,9 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
         backgroundColor: Colors.blueAccent,
         centerTitle: true,
         title: const Text(
-          'Tambah Transaksi',
+          'Tambah Transaksi Pembelian',
           style: TextStyle(color: Colors.white),
         ),
-      ),
-      body: const Center(
-        child: Text('Add Transaction Page'),
       ),
     );
   }
