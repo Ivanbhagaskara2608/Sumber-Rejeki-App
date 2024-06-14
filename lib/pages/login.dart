@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sumber_rezeki/widgets/custom_textfield.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -33,14 +34,8 @@ class _LoginPageState extends State<LoginPage> {
             const Text('User ID',
                 style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic)),
             const SizedBox(height: 5),
-            TextFormField(
-              controller: userIdTextController,
-              decoration: const InputDecoration(
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10))),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 10, vertical: 5)),
-            ),
+            CustomTextField(
+                controller: userIdTextController, hintText: 'Masukkan User ID'),
             const SizedBox(height: 10),
             const Text('Password',
                 style: TextStyle(fontSize: 14, fontStyle: FontStyle.italic)),
@@ -49,6 +44,7 @@ class _LoginPageState extends State<LoginPage> {
               controller: passwordTextController,
               obscureText: isPasswordVisible,
               decoration: InputDecoration(
+                  hintText: 'Masukkan Password',
                   suffixIcon: IconButton(
                       onPressed: () {
                         setState(() {

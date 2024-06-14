@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:sumber_rezeki/pages/add_barang_jadi.dart';
 import 'package:sumber_rezeki/pages/add_purchase.dart';
+import 'package:sumber_rezeki/pages/add_sale.dart';
 import 'package:sumber_rezeki/pages/purchase.dart';
 import 'package:sumber_rezeki/pages/login.dart';
 import 'package:sumber_rezeki/pages/sale.dart';
 import 'package:sumber_rezeki/pages/splashscreen.dart';
 import 'package:sumber_rezeki/pages/dashboard.dart';
+import 'package:sumber_rezeki/pages/stock_barang.dart';
 import 'package:sumber_rezeki/pages/transaction.dart';
 
 void main() {
@@ -26,6 +29,9 @@ class MyApp extends StatelessWidget {
         '/purchase': (context) => const PurchasePage(),
         '/sale': (context) => const SalePage(),
         '/add-purchase': (context) => const AddPurchasePage(),
+        '/add-sale': (context) => const AddSalePage(),
+        '/stock-barang': (context) => const StockBarangPage(),
+        '/add-barang-jadi': (context) => const AddBarangJadiPage(),
       },
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',

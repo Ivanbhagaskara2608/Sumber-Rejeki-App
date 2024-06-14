@@ -48,7 +48,9 @@ class SalePage extends StatelessWidget {
           }),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, '/add-sale');
+          },
           backgroundColor: Colors.blueAccent,
           shape: const CircleBorder(),
           child: const Icon(Icons.add, color: Colors.white),
