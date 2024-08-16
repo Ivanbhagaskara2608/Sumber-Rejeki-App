@@ -17,7 +17,7 @@ class DashboardPage extends StatelessWidget {
       ),
       const SizedBox(height: 10),
       const Text(
-        '1.600.000',
+        '600.000',
         style: TextStyle(fontSize: 18),
       ),
       const SizedBox(
@@ -101,7 +101,7 @@ class DashboardPage extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                print('Stok Barang');
+                Navigator.pushNamed(context, '/stock-barang');
               },
               child: Column(
                 children: [
@@ -115,15 +115,16 @@ class DashboardPage extends StatelessWidget {
             ),
             InkWell(
               onTap: () {
-                print('Pengaturan');
+                Navigator.pushNamedAndRemoveUntil(
+                    context, "/login", (route) => false);
               },
               child: Column(
                 children: [
-                  Image.asset("assets/images/settings.png", scale: 4),
+                  Image.asset("assets/images/logout.png", scale: 4),
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text('Pengaturan')
+                  const Text('Logout')
                 ],
               ),
             ),
