@@ -37,7 +37,9 @@ class BarangJadiPage extends StatelessWidget {
                               color: Colors.white,
                             ),
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.pushNamed(context, '/update-barang-jadi');
+                          },
                         ),
                       ],
                     ),

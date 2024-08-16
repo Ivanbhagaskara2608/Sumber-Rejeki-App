@@ -35,7 +35,9 @@ class BarangMentahPage extends StatelessWidget {
                             color: Colors.white,
                           ),
                         ),
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.pushNamed(context, '/update-barang-mentah');
+                        },
                       ),
                     ],
                   ),

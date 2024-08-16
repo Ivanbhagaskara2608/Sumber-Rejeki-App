@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:sumber_rezeki/services/base_client.dart';
+import 'package:sumber_rezeki/services/shared_preferences.dart';
 import 'package:sumber_rezeki/widgets/custom_textfield.dart';
 
 class LoginPage extends StatefulWidget {
@@ -61,8 +65,30 @@ class _LoginPageState extends State<LoginPage> {
             ),
             const SizedBox(height: 30),
             ElevatedButton(
-              onPressed: () {
-                Navigator.pushReplacementNamed(context, '/dashboard');
+              onPressed: () async {
+                // Navigator.pushReplacementNamed(context, '/dashboard');
+                var response = await BaseClient().post(
+                    "users/login",
+                    jsonEncode({
+                      "id": userIdTextController.text,
+                      "password": passwordTextController.text
+                    }));
+                var data = jsonDecode(response.body);
+
+                if (response.statusCode == 200 && data['success'] == true) {
+                  SharedPreferencesHelper.saveToken(data['data']['access_token']);
+                  // ignore: use_build_context_synchronously
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(data['message']),
+                  ));
+                  // ignore: use_build_context_synchronously
+                  Navigator.pushReplacementNamed(context, '/dashboard');
+                } else {
+                  // ignore: use_build_context_synchronously
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(data['message']),
+                  ));
+                }
               },
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blueAccent,

@@ -9,6 +9,9 @@ import 'package:sumber_rezeki/pages/splashscreen.dart';
 import 'package:sumber_rezeki/pages/dashboard.dart';
 import 'package:sumber_rezeki/pages/stock_barang.dart';
 import 'package:sumber_rezeki/pages/transaction.dart';
+import 'package:sumber_rezeki/pages/update_barang_jadi.dart';
+import 'package:sumber_rezeki/pages/update_barang_mentah.dart';
+import 'package:sumber_rezeki/pages/update_sale.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,6 +35,9 @@ class MyApp extends StatelessWidget {
         '/add-sale': (context) => const AddSalePage(),
         '/stock-barang': (context) => const StockBarangPage(),
         '/add-barang-jadi': (context) => const AddBarangJadiPage(),
+        '/update-sale': (context) => const UpdateSalePage(),
+        '/update-barang-jadi': (context) => const UpdateBarangJadiPage(),
+        '/update-barang-mentah': (context) => const UpdateBarangMentahPage(),
       },
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',

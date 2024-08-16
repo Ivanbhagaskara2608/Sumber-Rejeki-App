@@ -37,7 +37,9 @@ class SalePage extends StatelessWidget {
                     child: const Icon(Icons.arrow_forward_ios_rounded,
                         color: Colors.white),
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, '/update-sale');
+                  },
                 ),
                 tileColor: Colors.grey[300],
                 shape: RoundedRectangleBorder(

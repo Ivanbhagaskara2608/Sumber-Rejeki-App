@@ -1,9 +1,40 @@
 // ignore_for_file: avoid_print
 
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-class DashboardPage extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:sumber_rezeki/services/base_client.dart';
+import 'package:sumber_rezeki/services/shared_preferences.dart';
+
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
+
+  @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  Future<void> userProfile() async {
+    final token = await SharedPreferencesHelper.getToken();
+    var response = await BaseClient()
+        .postWithToken("users/me", jsonEncode({}), token!)
+        .catchError((err) {});
+
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.body);
+      SharedPreferencesHelper.saveRole(data['data']['role']);
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(data['data']['role']),
+      ));
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    userProfile();
+  }
 
   @override
   Widget build(BuildContext context) {
