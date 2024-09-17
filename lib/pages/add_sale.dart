@@ -1,7 +1,12 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
+import 'package:sumber_rezeki/services/base_client.dart';
+import 'package:sumber_rezeki/services/shared_preferences.dart';
 import 'package:sumber_rezeki/widgets/custom_calendar_textfield.dart';
-import 'package:sumber_rezeki/widgets/custom_dropdown.dart';
+import 'package:sumber_rezeki/widgets/custom_dropdown_barang.dart';
 import 'package:sumber_rezeki/widgets/custom_textfield.dart';
+import 'dart:convert';
 
 class AddSalePage extends StatefulWidget {
   const AddSalePage({super.key});
@@ -15,11 +20,35 @@ class _AddSalePageState extends State<AddSalePage> {
   final TextEditingController jumlahController = TextEditingController();
   final TextEditingController hargaController = TextEditingController();
   final TextEditingController keteranganController = TextEditingController();
-  final List<String> barangs = [
-    'BJ-1',
-    'BJ-2',
-  ];
-  String? selectedBarang;
+  List<Map<String, dynamic>> barangs = [];
+  String? selectedBarangId;
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchBarangs(); // Fetch data from API
+  }
+
+  Future<void> fetchBarangs() async {
+    final token = await SharedPreferencesHelper.getToken();
+    var response = await BaseClient()
+        .getWithToken('barang-jadi/available', token!)
+        .catchError((err) {});
+    if (response != null && response.statusCode == 200) {
+      var responseData = jsonDecode(response.body);
+      List data = responseData['data'];
+      setState(() {
+        barangs = data.map((item) {
+          return {
+            'id': item['id'],
+            'nama': item['nama'],
+          };
+        }).toList();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,50 +67,102 @@ class _AddSalePageState extends State<AddSalePage> {
       ),
       body: Padding(
           padding: const EdgeInsets.all(15),
-          child: Column(
-            children: [
-              CustomCalendarTextField(
-                  controller: tanggalController, hintText: "Tanggal"),
-              const SizedBox(height: 15),
-              CustomDropdown(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                CustomCalendarTextField(
+                    controller: tanggalController, hintText: "Tanggal"),
+                const SizedBox(height: 15),
+                CustomDropdownBarang(
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Barang Jadi tidak boleh kosong';
+                    }
+                    return null;
+                  },
                   items: barangs,
                   onChanged: (value) {
-                    selectedBarang = value;
+                    setState(() {
+                      selectedBarangId = value; // Save selected barang ID
+                    });
                   },
-                  selectedValue: selectedBarang,
-                  hintText: "Barang Jadi"),
-              const SizedBox(height: 15),
-              CustomTextField(
-                  controller: jumlahController,
-                  hintText: "Jumlah Barang (KG)",
-                  keyboardType: TextInputType.number),
-              const SizedBox(height: 15),
-              CustomTextField(
-                  controller: hargaController,
-                  hintText: "Harga Satuan (Rp)",
-                  keyboardType: TextInputType.number),
-              const SizedBox(height: 15),
-              CustomTextField(
-                  controller: keteranganController, hintText: "Keterangan"),
-              const SizedBox(height: 25),
-              ElevatedButton(
-                onPressed: () {
-                  // Do something
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blueAccent,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                  selectedValue: selectedBarangId,
+                  hintText: "Barang Jadi",
+                ),
+                const SizedBox(height: 15),
+                CustomTextField(
+                    controller: jumlahController,
+                    hintText: "Jumlah Barang (KG)",
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Jumlah Barang tidak boleh kosong';
+                      }
+                      return null;
+                    }),
+                const SizedBox(height: 15),
+                CustomTextField(
+                    controller: hargaController,
+                    hintText: "Harga Satuan (Rp)",
+                    keyboardType: TextInputType.number,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Harga Satuan tidak boleh kosong';
+                      }
+                      return null;
+                    }),
+                const SizedBox(height: 15),
+                CustomTextField(
+                    controller: keteranganController, hintText: "Keterangan"),
+                const SizedBox(height: 25),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      final token = await SharedPreferencesHelper.getToken();
+                      var response = await BaseClient().postWithToken(
+                          'penjualan/store',
+                          jsonEncode({
+                            'tanggal': tanggalController.text,
+                            'barang_id': selectedBarangId,
+                            'jumlah': jumlahController.text,
+                            'harga': hargaController.text,
+                            'keterangan': keteranganController.text,
+                          }),
+                          token!);
+                      var data = jsonDecode(response.body);
+
+                      if (response.statusCode == 200) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(data['message']),
+                          ),
+                        );
+                        Navigator.pop(context);
+                        Navigator.popAndPushNamed(context, '/sale');
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(data['message']),
+                          backgroundColor: Colors.red,
+                        ));
+                      }
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: const Text(
+                    'Tambah',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
-                child: const Text(
-                  'Tambah',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
+              ],
+            ),
           )),
     );
   }

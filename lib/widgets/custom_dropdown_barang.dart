@@ -2,20 +2,18 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class CustomDropdown extends StatelessWidget {
-  final List<String> items;
+class CustomDropdownBarang extends StatelessWidget {
+  final List<Map<String, dynamic>> items;
   final ValueChanged<String?> onChanged;
   String? selectedValue;
-  String? initialValue;
   final String hintText;
-  final String? Function(String?)? validator;
+  final String? Function(String?)? validator; 
 
-  CustomDropdown({
+  CustomDropdownBarang({
     super.key,
     required this.items,
     required this.onChanged,
     required this.selectedValue,
-    this.initialValue,
     required this.hintText,
     required this.validator,
   });
@@ -23,8 +21,8 @@ class CustomDropdown extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField2<String>(
-      value: initialValue,
       validator: validator,
+      value: selectedValue,
       hint: Text(hintText),
       isExpanded: true,
       decoration: InputDecoration(
@@ -35,19 +33,19 @@ class CustomDropdown extends StatelessWidget {
       ),
       items: items
           .map((item) => DropdownMenuItem<String>(
-                value: item,
-                child: Text(item),
+                value: item['id'].toString(),
+                child: Text(item['nama']),
               ))
           .toList(),
       onChanged: (value) {
-        selectedValue = value.toString();
-        onChanged(value.toString());
+        selectedValue = value;
+        onChanged(value);
       },
       onSaved: (value) {
-        selectedValue = value.toString();
+        selectedValue = value;
       },
       buttonStyleData: const ButtonStyleData(
-        padding: EdgeInsets.only(right: 10), // No padding for the button
+        padding: EdgeInsets.only(right: 10),
       ),
       iconStyleData: const IconStyleData(
         icon: Icon(
@@ -56,14 +54,13 @@ class CustomDropdown extends StatelessWidget {
         iconSize: 24,
       ),
       dropdownStyleData: DropdownStyleData(
-        padding: const EdgeInsets.symmetric(
-            horizontal: 10), // No padding for the dropdown
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
         ),
       ),
       menuItemStyleData: const MenuItemStyleData(
-        padding: EdgeInsets.zero, // No padding for the menu items
+        padding: EdgeInsets.zero,
       ),
     );
   }

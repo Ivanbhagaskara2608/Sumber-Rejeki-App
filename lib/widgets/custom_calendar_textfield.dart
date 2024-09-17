@@ -20,6 +20,12 @@ class _CustomCalendarTextFieldState extends State<CustomCalendarTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Tanggal tidak boleh kosong';
+        }
+        return null;
+      },
       controller: widget.controller,
       readOnly: true,
       onTap: () async {
@@ -32,7 +38,7 @@ class _CustomCalendarTextFieldState extends State<CustomCalendarTextField> {
         );
 
         if (pickedDate != null) {
-          String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+          String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
 
           setState(() {
             widget.controller.text = formattedDate;

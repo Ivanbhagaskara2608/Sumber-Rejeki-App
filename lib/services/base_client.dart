@@ -33,7 +33,7 @@ class BaseClient {
     return response;
   }
 
-  Future<dynamic> geWithToken(String api, String token) async {
+  Future<dynamic> getWithToken(String api, String token) async {
     var url = Uri.parse('$baseUrl/$api');
     var headers = {'Authorization': "Bearer $token"};
     var response = await client.get(url, headers: headers);
